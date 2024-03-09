@@ -19,6 +19,7 @@ const Admin = () => {
   const [refresh, setrefresh] = useState(true)
   const admin = useSelector(selectAdmin);
 
+
   useEffect(() => {
     dispatch(getProdsAsync())
   }, [refresh])
@@ -32,9 +33,7 @@ const Admin = () => {
 
   // implemnet update - put 
   const handleUpd = (id, nwDataObj) => {
-    dispatch(updateProdAsync({ id, nwDataObj }));
-    setDescription("");
-    setPrice(0);
+    dispatch(updateProdAsync({ id, nwDataObj: { description, price, catID: category } }));
   };
   return (
     <div>
@@ -50,31 +49,32 @@ const Admin = () => {
         price: <input onChange={(e) => setPrice(e.target.value)} />
         category:
         <select onChange={(e) => setcategory(e.target.value)}>
-          <option id="1">Foods & Kitchen</option>
-          <option id="2">Electronics</option>
-          <option id="3">Fashion & Accessories</option>
+          <option value="1">Foods & Kitchen</option>
+          <option value="2">Electronics</option>
+          <option value="3">Fashion & Accessories</option>
         </select>
         {/* ? */}
         image: <input type='file' onChange={(e) => setImage(e.target.files)} />
-        <button className='btn btn-primary' onClick={() => dispatch(addProdAsync({ description, price, category }))}>add product to my server - admin</button>
+        <button className='btn btn-primary' onClick={() => dispatch(addProdAsync({ description, price, catID: category}))}>add product to my server - admin</button>
         {/* ? */}
         <hr></hr>
         total of products in market: <div >{Prods.length}</div>
-        <hr></hr>
+
       </div> : <h2 style={{ color: "red", padding: 250 }}>Admin please login ! </h2>}
       <div className="row row-cols-1 row-cols-md-6 g-4">
         {admin ? Prods.map(prod => <div key={prod.id} className="col" >
           <div className="card">
             <img src={"https://picsum.photos/20" + prod.id} className="card-img-top" alt="..." />
             <div className="card-body">
-              <h5 className="card-title">{prod.id} , {prod.image},</h5>
-              <p className="card-text"> {prod.description}  , <br></br> Only {prod.price}$ ! <br></br> category:
-                {prod.category}</p>
+              <h5 className="card-title"> {prod.id} , {prod.image}</h5>
+              <p className="card-text"> {prod.description}  , <br></br> Only {prod.price}$ ! <br></br>
+                Category: {prod.category_desc || 'Unknown'}
+              </p>
               <button className='btn btn-danger' onClick={() => handleDel(prod.id)}>Delete</button>
               <button className='btn btn-warning' onClick={() => handleUpd(prod.id, {
                 name: description || prod.description,
                 price: price || prod.price,
-                category: category || prod.category,
+                catID: category || prod.category,
               })}>update</button>
             </div>
           </div>

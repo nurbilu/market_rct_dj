@@ -3,7 +3,6 @@ const MY_SERVER = "http://127.0.0.1:8000/products";
 
 
 export function getProds() {
-    console.log("hello");
     return axios.get(MY_SERVER)
 }
 
@@ -12,7 +11,7 @@ export function addProd(prod) {
     );
 }
 
-export function updateProd(prod, prodId) {
+export function updateProd(prodId ,prod) {
     return axios.put(`${MY_SERVER}/${prodId}`,prod)
 }
 

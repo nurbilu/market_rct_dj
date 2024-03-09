@@ -3,24 +3,24 @@ from django.db import models
 # Create your models here.
 from django.contrib.auth.models import User
 
+class Category(models.Model):
+    id = models.AutoField(primary_key=True)
+    Desc = models.CharField(max_length=200)
 
+    def __int__(self):
+        return self.id
+    
 class Product(models.Model):
     user = models.ForeignKey(User,on_delete=models.SET_NULL,null=True)
     image = models.ImageField(null=True,blank=True,default='/placeholder.png')
     price = models.FloatField()
     description = models.CharField(max_length=100)
-    catID = models.ForeignKey('Category',on_delete=models.SET_NULL,null=True)
+    catID = models.ForeignKey(Category , on_delete=models.SET_NULL, null=True)
     completed = models.BooleanField(default=False)
 
     def __str__(self):
         return self.title
 
-
-class Category(models.Model):
-    Desc = models.CharField(max_length=200)
-
-    def __str__(self):
-        return self.name
     
 
 class Order(models.Model):

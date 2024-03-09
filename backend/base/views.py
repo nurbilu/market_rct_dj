@@ -61,10 +61,19 @@ class ProductView(APIView):
     def post(self, request):
         serializer = ProductSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
-            return Response (serializer.data)
+            catID = request.data.get('catID')  # Extract catID from request
+            if catID:
+                try:
+                    category = Category.objects.get(id=catID)  # Attempt to get Category instance
+                    serializer.save(catID=category)  # Save product with category
+                except Category.DoesNotExist:
+                    return Response({"error": "Category not found"}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                serializer.save()  # Save without category if catID not provided
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
-            return Response (serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
         
     def delete(self, request, id):
         product = Product.objects.get(id=id)
@@ -72,13 +81,26 @@ class ProductView(APIView):
         return Response('Item deleted')
     
     def put(self, request, id):
-        product = Product.objects.get(id=id)
+        try:
+            product = Product.objects.get(id=id)
+        except Product.DoesNotExist:
+            return Response({'error': 'Product not found'}, status=status.HTTP_404_NOT_FOUND)
+
         serializer = ProductSerializer(instance=product, data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            catID = request.data.get('catID')
+            if catID:
+                try:
+                    category = Category.objects.get(id=catID)
+                    serializer.save(catID=category)
+                except Category.DoesNotExist:
+                    return Response({"error": "Category not found"}, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                serializer.save()  # Save without updating category if catID not provided
             return Response(serializer.data)
         else:
-            return Response(serializer.errors)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 class CategoryView(APIView):
@@ -93,6 +115,11 @@ class CategoryView(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, id):
+        category = Category.objects.get(id=id)
+        category.delete()
+        return Response('Item deleted')
     
 
 class OrderView(APIView):
@@ -128,7 +155,14 @@ class MyTokenObtainPairView(TokenObtainPairView):
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = '__all__'
+        fields = '__all__'  # This should include catID implicitly
+
+    def validate_catID(self, value):
+        if not Category.objects.filter(id=value).exists():
+            raise serializers.ValidationError("This category does not exist.")
+        return value
+
+
         
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
