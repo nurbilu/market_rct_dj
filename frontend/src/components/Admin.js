@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import { selectProds, getProdsAsync, addProdAsync, deleteProdAsync, updateProdAsync } from '../features/products/prodSlice'
 import { Axios } from 'axios';
-import { selectUsername, selectAdmin, selectLogged, logout } from '../features/counter/loginSlice.js'
+import { selectUsername, selectAdmin, selectLogged, logout } from '../features/login/loginSlice.js'
 
 const Admin = () => {
   // Admin can add, delete, update, get all the products

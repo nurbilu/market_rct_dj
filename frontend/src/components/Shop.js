@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import { selectProds, getProdsAsync, addProdAsync } from '../features/products/prodSlice'
-import { selectUsername, selectAdmin, selectLogged, logout } from '../features/counter/loginSlice.js'
+import { selectUsername, selectAdmin, selectLogged, logout } from '../features/login/loginSlice.js'
 
 export const Shop = () => {
   // users and admin can see all the products 

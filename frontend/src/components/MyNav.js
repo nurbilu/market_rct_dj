@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from "react-router-dom";
-import { selectUsername, selectAdmin, selectLogged, logout } from '../features/counter/loginSlice.js'
+import { selectUsername, selectAdmin, selectLogged, logout } from '../features/login/loginSlice.js'
 import { useSelector, useDispatch } from 'react-redux';
 const MyNav = () => {
     const admin = useSelector(selectAdmin);

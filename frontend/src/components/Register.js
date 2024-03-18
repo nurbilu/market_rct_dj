@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { registerAsync } from '../features/counter/registerSlice'; // Corrected import
+import { registerAsync } from '../features/register/registerSlice';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Button from '@mui/material/Button';
+import SendIcon from '@mui/icons-material/Send';
+import Form from 'react-bootstrap/Form';
+import FloatingLabel from 'react-bootstrap/FloatingLabel';
+import 'bootstrap/dist/css/bootstrap.min.css'; // Ensure Bootstrap CSS is imported
 
 const Register = () => {
     const [username, setUsername] = useState('');
@@ -11,7 +16,6 @@ const Register = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
     const dispatch = useDispatch();
-
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -30,7 +34,6 @@ const Register = () => {
                 setConfirmPassword('');
             }
         } catch (err) {
-            // setError('Failed to register');
             toast.error('Registration failed!');
             setUsername('');
             setEmail('');
@@ -38,33 +41,26 @@ const Register = () => {
             setConfirmPassword('');
         }
     };
-    useEffect(() => {
 
-    }, [])
+    useEffect(() => {}, []);
 
     return (
-
         <form onSubmit={handleSubmit}>
-            {/* Form fields for username, email, password, and confirmPassword */}
             <ToastContainer />
-            <div>
-                <label>Username:</label>
-                <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-            </div>
-            <div>
-                <label>Email:</label>
-                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-            </div>
-            <div>
-                <label>Password:</label>
-                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-            </div>
-            <div>
-                <label>Confirm Password:</label>
-                <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
-            </div>
-            {error && <p>{error}</p>}
-            <button type="submit">Register</button>
+            <FloatingLabel controlId="floatingUsername" label="Username" className="mb-3">
+                <Form.Control type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
+            </FloatingLabel>
+            <FloatingLabel controlId="floatingEmail" label="Email address" className="mb-3">
+                <Form.Control type="email" placeholder="name@example.com" value={email} onChange={(e) => setEmail(e.target.value)} />
+            </FloatingLabel>
+            <FloatingLabel controlId="floatingPassword" label="Password" className="mb-3">
+                <Form.Control type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+            </FloatingLabel>
+            <FloatingLabel controlId="floatingConfirmPassword" label="Confirm Password">
+                <Form.Control type="password" placeholder="Confirm Password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
+            </FloatingLabel>
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+            <Button type="submit" variant="contained" endIcon={<SendIcon />} color='success'>Register</Button>
         </form>
     );
 };
